@@ -31,7 +31,6 @@ app.get('/todos', (req, res) => {
     });
 });
 
-// GET /todos/1234323
 app.get('/todos/:id', (req, res) => {
     var id = req.params.id;
 
@@ -44,15 +43,23 @@ app.get('/todos/:id', (req, res) => {
             return res.status(404).send();
         }
         res.send({todo});
-    }).catch((e) => res.status(404).send({}));
+    }).catch((e) => res.status(400).send({}));
+});
 
+app.delete('/todos/:id', (req, res) => {
+    var id = req.params.id;
 
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
 
-    //if not valid, stop function execution and return 404 - send back empty body: res.status(404).send()
-    //query todos collection with document.  
-        //success case-> if todo - send it back.  if no todo - send back a 404 with empty body
-        //error case->  res.status(400).send()
-})
+    Todo.findByIdAndRemove(id).then((todo) => {
+        if (!todo) {
+            return res.status(404).send();
+        }
+        res.send({todo});
+    }).catch((e) => res.status(400).send({}));
+});
 
 app.listen(port, () => {
     console.log(`Started on port ${port}`);
