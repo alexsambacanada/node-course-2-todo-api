@@ -83,11 +83,6 @@ UserSchema.pre('save', function (next) {
             });
         }); 
 
-
-
-        // in callback:
-        // user.paassword = hash;
-        // next();
     } else {
         next();
     }
